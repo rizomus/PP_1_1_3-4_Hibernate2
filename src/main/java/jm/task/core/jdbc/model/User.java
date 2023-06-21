@@ -3,6 +3,7 @@ package jm.task.core.jdbc.model;
 import javax.persistence.*;
 
 @Entity
+@Table
 public class User {
     @Id
     @GeneratedValue
@@ -10,6 +11,7 @@ public class User {
 
     private String name;
 
+    @Column(name = "last_name")
     private String lastName;
 
     private Byte age;

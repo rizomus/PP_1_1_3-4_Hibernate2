@@ -15,12 +15,12 @@ import java.util.Properties;
 
 public class Util {  // реализуйте настройку соеденения с БД
 
+    private static SessionFactory sessionFactory;
+    private static String dbURL = "jdbc:mysql://localhost:3306/world";
+    private static String dbUsername = "root";
+    private static String password = "synchro4";
 
     public static Connection getConnection() throws SQLException {
-
-        String dbURL = "jdbc:mysql://localhost:3306/";
-        String dbUsername = "root";
-        String password = "synchro4";
 
         Connection connection = null;
         try {
@@ -32,16 +32,15 @@ public class Util {  // реализуйте настройку соеденен
     }
 
 
-    private static SessionFactory sessionFactory;
+     public static SessionFactory getSessionFactory() {
 
-    public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             Configuration configuration = new Configuration();
             Properties settings = new Properties();
             settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
-            settings.put(Environment.URL, "jdbc:mysql://localhost:3306/world");
-            settings.put(Environment.USER, "root");
-            settings.put(Environment.PASS, "synchro4");
+            settings.put(Environment.URL, dbURL);
+            settings.put(Environment.USER, dbUsername);
+            settings.put(Environment.PASS, password);
             settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
             settings.put(Environment.SHOW_SQL, "false");
             settings.put(Environment.HBM2DDL_AUTO, "update");
