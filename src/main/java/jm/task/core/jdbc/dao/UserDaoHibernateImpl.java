@@ -10,6 +10,7 @@ import org.hibernate.query.Query;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.Collections;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -20,7 +21,7 @@ public class UserDaoHibernateImpl implements UserDao {
     }
 
     @Override
-    public void createUsersTable() {
+    public void createUsersTable() throws HibernateException {
 
         var sql = "CREATE TABLE IF NOT EXISTS user" +
                 "(id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
@@ -32,11 +33,13 @@ public class UserDaoHibernateImpl implements UserDao {
             Query query = session.createSQLQuery(sql);
             query.executeUpdate();
             transaction.commit();
+        } catch (HibernateException e)  {
+            throw e;
         }
     }
 
     @Override
-    public void dropUsersTable() {
+    public void dropUsersTable() throws HibernateException {
 
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
@@ -45,6 +48,8 @@ public class UserDaoHibernateImpl implements UserDao {
             Query query = session.createSQLQuery(sql);
             query.executeUpdate();
             transaction.commit();
+        } catch (HibernateException e)  {
+            throw e;
         }
 
     }
@@ -77,8 +82,8 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = sessionFactory.openSession()) {
 
             transaction = session.beginTransaction();
-            Query query = session.createQuery("delete User where id = :username");
-            query.setParameter("username", id);
+            Query query = session.createQuery("delete User where id = :id");
+            query.setParameter("id", id);
             query.executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
@@ -92,7 +97,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
 
-        List<User> entityList = null;
+        List<User> entityList = Collections.<User>emptyList();
 
         try (Session session = sessionFactory.openSession()) {
 
